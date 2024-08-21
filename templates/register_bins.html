@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Bin Register
+{% endblock %}
+
+{% block main %}
+    <!-- This is the student registration page-->
+    <h1>Use this page to register new bins for a lab class room. </h1>
+    <par>The bin numbers will default starting from 1. For example, registering 30 bins will assign numbers of 1,2,3,...30.</par>
+    <div style = "padding-top: 25px;">
+        <form action = "/register_bins" method = "post">
+            <div class="mb-3">
+                <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="room_num" name="room_num" placeholder="Room Number (i.e. - SV20)" type="text">
+            </div>
+            <div class="mb-3">
+                <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="bin_count" name="bin_count" placeholder="Number of bins to register" type="number">
+            </div>
+            <button class="btn btn-primary" type="submit">Register Bins</button>
+
+        </form>        
+    </div>
+
+{% endblock %}

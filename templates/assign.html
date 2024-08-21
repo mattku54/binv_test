@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Student Bin Assignment
+{% endblock %}
+
+{% block main %}
+    <!-- This is the page where the student chooses their bin-->
+    <h1>If you have not yet been assigned a bin, register your bin assignment here</h1>
+    
+    <div>
+        <form action = "/assign" method = "post">
+            <div class="mb-3">
+                <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="semester" name="semester" placeholder="Semester (i.e.- FA22)" type="text">
+            </div>
+            <div class="mb-3">
+                <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="crn" name="crn" placeholder="CRN Number" type="number">
+            </div>
+            <div class="mb-3">
+                <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="room_num" name="room_num" placeholder="Lab Room Number" type="text">
+            </div>
+            <div class="mb-3">
+                <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="bin_num" name="bin_num" placeholder="Bin Number" type="number">
+            </div>
+            <div class="mb-3">
+                <input autocomplte="off" class="form-control mx-auto w-auto" id="confirmation" name="confirmation" placeholder="Confirm Bin Number" type="number">
+            </div>
+            <button class="btn btn-primary" type="submit">Register</button>
+
+        </form>        
+    </div>
+
+{% endblock %}

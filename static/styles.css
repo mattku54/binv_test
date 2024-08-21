@@ -1,0 +1,61 @@
+/* Size for brand */
+nav .navbar-brand
+{
+    font-size: xx-large;
+}
+
+/* Colors for brand */
+
+nav .navbar-brand .school_color
+{
+    color: #be1e2d;
+    text-shadow: 1px 1px #ffcf0c;
+}
+
+nav .navbar-brand .blue
+{
+    color: #537fbe;
+}
+
+nav .navbar-brand .yellow
+{
+    color: #f5b82e;
+}
+nav .navbar-brand .green
+{
+    color: #2e944b;
+}
+
+/* Table alignments */
+
+table, th, td {
+    border: 1px solid #0c0c0c;
+    border-collapse: collapse;
+    width: 25%;
+    margin-left: auto;
+    margin-right: auto;
+    table-layout: auto;
+    text-overflow: ellipsis;
+}
+
+td .status {
+    background-color: #2e944b;
+}
+
+tr:hover {background-color:#ffcf0c;}
+
+
+/* Padding for the headers and par */
+
+h1, h2, par {
+    padding-bottom: 25px;
+}
+
+/* Target the numbers to not have any increment or decrement buttons */
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+
+    -webkit-appearance: none;
+    margin: 0;
+}

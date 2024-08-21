@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Admin Log In
+{% endblock %}
+
+{% block main %}
+    <h1>Admin Log In</h1>
+    <form action="/admin_login" method="post">
+        <div class="mb-3">
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="email" name="email" placeholder="E-mail" type="text">
+        </div>
+        <div class="mb-3">
+            <input class="form-control mx-auto w-auto" id="password" name="password" placeholder="Password" type="password">
+        </div>
+        <button class="btn btn-primary" type="submit">Log In</button>
+    </form>
+    <ul class="navbar-nav me-auto mt-2">
+        <li class="nav-item"><a class="nav-link" href="/admin_register">Register as Admin (Admin Key Required)</a></li>
+    </ul>
+{% endblock %}

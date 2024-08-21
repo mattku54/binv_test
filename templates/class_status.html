@@ -1,0 +1,90 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Class Status
+{% endblock %}
+
+{% block main %}
+
+    {% if request.method == "POST" %}
+    <h1> {{ semester }} {{ crn }} Bin Status </h1>
+    <table class="table">
+        <thead>
+            <tr>
+            {% for key in bin_statusses[0].keys() %}
+                {% if key != "bin_code" and key != "last_user_code" %}
+
+                    <th scope="col">{{ key }}</th>
+
+                {% endif %}
+            {% endfor %}
+            </tr>
+            
+        </thead>
+            <tbody>
+                {% for row in bin_statusses %}
+                    <tr>
+                        {% for key in row.keys() %}
+                            {% if key != "bin_code" and key != "last_user_code" %}
+                            
+                                <td class = "status" id="{{ key }}">{{ row[key] }}</td>
+                            
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    <script>
+        
+        // Loop through every cell of class status
+        let cells = document.getElementsByClassName("status")
+
+        n = cells.length;
+
+        for (let i = 0; i < n; i++) {
+            // Set the cell as one piece of cell data
+            let cell = cells[i]
+
+            // Get the value of the item
+            var value = cell.innerText;
+
+            // Set the background color of the cell depending on value
+            if (value == 'clean')
+                {
+                    cell.style.backgroundColor = 'rgba(38, 194, 129, 0.5)';
+                }
+            else if (value == 'missing')
+                {
+                    cell.style.backgroundColor = 'rgba(255,0,0,0.8)';
+                }
+            else if (value == 'partial')
+                {
+                    cell.style.backgroundColor = 'rgba(249, 180, 45, 0.5)';
+                }
+            else if (value == 'dirty')
+                {
+                    cell.style.backgroundColor = 'rgba(227, 186, 143, 1)';
+                }
+        }
+
+    </script>
+    {% else %}
+
+    <h1>Class Bin Status</h1>
+    <h2>Find Class</h2>
+    <div>
+        <form action = "/class_status" method = "post">
+            <div class="mb-3">
+                <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="semester" name="semester" placeholder="Semester (i.e. - FA22)" type="text">
+            </div>
+            <div class="mb-3">
+                <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="crn" name="crn" placeholder="CRN" type="number">
+            </div>
+            <button class="btn btn-primary" type="submit">Find Class</button>
+        </form>        
+    </div>
+
+    {% endif %}
+
+{% endblock %}

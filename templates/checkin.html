@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Check In
+{% endblock %}
+
+{% block main %}
+    <!-- This is the student check in page-->
+    <h1>Check In </h1>
+    <h2>Check all of the items in your bin and report its status. </h2>
+
+    <div>
+        <form action = "/checkin" method = "post">
+            {% for item in bin_contents %}
+
+                <div class="mb-3">
+                    <select autocomplete="off" autofocus class="form-control mx-auto w-auto" id="{{ item }}" name="{{ item }}" type="text">
+                        <option selected disabled>{{ item }}</option>
+                        {% for status in statusses %}
+                            <option value="{{ status }}">{{ status }}</option>
+                        {% endfor %}
+                        </select>
+                </div>
+
+            {% endfor %}
+            <button class="btn btn-primary" type="submit">Submit</button>
+        </form>        
+    </div>
+
+{% endblock %}

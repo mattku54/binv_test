@@ -1,0 +1,209 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Edit Student Bin Assignment
+{% endblock %}
+
+{% block main %}
+
+    <h1>Use this page to edit bin assignments for a class. </h1>
+
+    <h2 id = "cur_class">Current Class Bin Assignment</h2>
+    <table class = "table" id = "bin_assign">
+        <thead>
+            <tr>
+                <th scope = "col">Bin Number</th>
+                <th scope = "col">Student</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- These will be dynamically generated via AJAX-->    
+        </tbody>
+    </table>
+
+    <div>
+        <form action = "/edit_class" method = "post">
+            <div class="mb-3 input1">
+                <input autocomplete="off" autofocus class="form-control mx-auto w-auto input1" id="semester" name="semester" placeholder="Semester (i.e. - FA22)" type="text">
+            </div>
+            <div class="mb-3 input1">
+                <input autocomplete="off" autofocus class="form-control mx-auto w-auto input1" id="crn" name="crn" placeholder="CRN" type="number">
+            </div>
+            <button class="btn btn-primary input1" type = "button" id = "first_button">Find Class</button>
+            <div class="mb-3 input2" style="display: none;">
+                <select autofocus class = "form-control mx-auto w-auto" name = "students" id = "students">
+
+                    <option selected disabled>Student</option>
+                    <!-- More options will be generated via AJAX-->
+                </select>
+            </div>
+            <div class="mb-3 input2" style="display: none;">
+                <select autofocus class = "form-control mx-auto w-auto" name = "empty_bins" id = "empty_bins"> 
+
+                    <option selected disabled>New Bin Number</option>
+                    <!-- More options will be generated via AJAX-->
+
+                </select>
+            </div>
+            <div class="mb-3 input2" style="display: none;">
+                <button class="btn btn-primary" type="submit">Update Bin Assignment</button>
+            </div>
+        </form>      
+    </div>
+
+    <script>
+        
+        function ajax_request() {
+
+            let semester = document.getElementById('semester')
+            let crn = document.getElementById('crn')
+
+            if (semester.value == '' || crn.value == ''){
+
+                alert("No inputs");
+                return
+
+            }
+            else {
+                
+                // Hide the rows for the semester, crn, and first button
+                var unhidden_rows = document.getElementsByClassName('input1')
+
+                for (var i = 0; i < unhidden_rows.length; i++){
+
+                    unhidden_rows[i].style.display = "none";
+
+                }
+                
+                // Unhide the rows for the student name and empty bin inputs
+                var hidden_rows = document.getElementsByClassName('input2')
+
+                for (var i = 0; i < hidden_rows.length; i++){
+
+                    hidden_rows[i].style.display = "block";
+
+                }
+
+                // Update the header text
+                var header = document.getElementById('cur_class')
+                header.textContent = 'SEM: ' + semester.value + ' ' + 'CRN: ' + crn.value + ' Bin Assignment'
+                    
+                // Initialize ajax request for student_list and empty_bins
+                var aj = new XMLHttpRequest();
+
+                // Unhide student name and new bin nputs
+                aj.onreadystatechange = function() {
+                    if(aj.readyState == 4 && aj.status == 200){
+                        
+                        // Parse the data from ajax request
+                        var data = JSON.parse(aj.responseText)
+
+                        // Create variables for the student_list and empty bins
+                        var student_list = data.student_list
+                        var empty_bins = data.empty_bins
+
+
+                        // These functions will generate the table and create the new select inputs
+                        generate_student_table(student_list)
+                        empty_bin_list(empty_bins)
+
+                    }
+                    else {
+                        return
+                    }
+                }                                 
+                // Gather the data from the ajax request to generate the student_bin_list 
+                aj.open("GET", '/student_empty_lists?semester=' + encodeURIComponent(semester.value) + '&crn=' + encodeURIComponent(crn.value), true);
+                aj.send()
+            }
+        }
+
+    function generate_student_table(student_list){
+
+        // Generate the rows for the table 'bin_assign'
+        var table = document.getElementById('bin_assign')
+
+        // Iterate through the student list and add a row with bin_num and name to the cells
+        for (var i = 0; i < student_list.length; i++) {
+                
+            var row = table.insertRow(-1); // Insert a new row at end of table
+
+            // For the 1st cell in the row, include the bin number
+            var bin_num = row.insertCell(0);
+                        
+            if (student_list[i].hasOwnProperty('bin_num')) {
+
+                bin_num.textContent = student_list[i].bin_num;
+
+            }
+            else {
+                alert("No bin_num in student_list")
+                return
+            }
+
+            // For the 2nd cell, include the student's first and last name
+            var student_name = row.insertCell(1);
+                            
+            if (student_list[i].hasOwnProperty('FirstName') || student_list[i].hasOwnProperty('LastName')){
+
+                student_name.textContent = student_list[i].FirstName + ' ' + student_list[i].LastName
+                                        
+            }
+            else {
+                alert("No names in student_list")
+                return
+            }
+
+            // Create option to select student in the new inputs for 'students'
+                            
+            // New option
+            var option = document.createElement('option');
+
+            // Option value will be student's pcc id but will display student's name
+            if(student_list[i].hasOwnProperty('pcc_id')) {
+                option.value = student_list[i].pcc_id;
+                option.textContent = student_name.textContent;
+
+                // Add the newly created option to the input
+                document.getElementById('students').appendChild(option);
+            }
+            else {
+                alert("No pcc_id in student_list")
+                return
+            }
+        }
+    }
+
+    function empty_bin_list(empty_bin_list) {
+
+        // Generate a new option in the input "empty_bins" for each empty bin
+
+        // Check to make sure empty_bins is an array
+        if (Array.isArray(empty_bin_list)) {
+            
+            for (var i = 0; i < empty_bin_list.length; i++) {
+
+                var option = document.createElement('option');
+                option.value = empty_bin_list[i]
+                option.textContent = empty_bin_list[i]
+                document.getElementById('empty_bins').appendChild(option);
+            }
+        }
+        else {
+
+            alert("empty_bin_list is not an array")
+            return
+        }
+
+        return
+    }
+
+    // Once user has selected the semester and crn, use an ajax request to generate the table and the options
+    document.querySelector('#first_button').addEventListener('click', function(event){
+        event.preventDefault();
+        ajax_request()
+    })
+
+    </script>
+
+{% endblock %}

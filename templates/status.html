@@ -1,0 +1,66 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Bin Status
+{% endblock %}
+
+{% block main %}
+
+
+<h1> Bin# {{ bin_status["bin_num"] }} Items Status </h1>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">Item</th>
+            <th scope="col">Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in bin_status.keys() %}
+            {% if item != "bin_num" %}
+                <tr>
+                    <td>{{ item }}</td>
+                    <td id="{{ item }}">{{ bin_status[item] }}</td>
+                </tr> 
+            {% endif %}
+        {% endfor %}
+    </tbody>
+</table>
+
+<script>
+
+    // Convert bin_contents into an array
+    let binContents = {{ bin_contents | tojson | safe }};    
+// Use a loop to iterate through all of the items in the bin_contents
+    
+    n = binContents.length;
+    for (let i = 0; i < n; i++) {
+        
+        // Set the item as a string from the bin_contents list
+        item = binContents[i]
+
+        // Get the value of the item from the td
+        var id = document.getElementById(item);
+        var value = id.innerText;
+
+        if (value == 'clean')
+            {
+                id.style.backgroundColor = 'rgba(38, 194, 129, 0.5)';
+            }
+        else if (value == 'missing')
+            {
+                id.style.backgroundColor = 'rgba(255,0,0,0.8)';
+            }
+        else if (value == 'partial')
+        {
+            id.style.backgroundColor = 'rgba(249, 180, 45, 0.5)';
+        }
+        else if (value == 'dirty')
+        {
+            id.style.backgroundColor = 'rgba(227, 186, 143, 1)';
+        }
+    }
+
+</script>
+
+{% endblock %}
