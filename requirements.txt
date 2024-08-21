@@ -4,4 +4,3 @@ Flask-Mail
 requests
 gunicorn
 pytz
-PyJWT
