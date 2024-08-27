@@ -51,6 +51,17 @@ h1, h2, par {
     padding-bottom: 25px;
 }
 
+.custom-select{
+    display:inline-block;
+}
+
+label{
+    font-size: 16px;
+    font-weight: bold;
+    font-family: Arial, sans-serif;
+}
+
+
 /* Target the numbers to not have any increment or decrement buttons */
 
 input[type="number"]::-webkit-inner-spin-button,

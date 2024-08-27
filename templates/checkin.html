@@ -11,15 +11,17 @@
 
     <div>
         <form action = "/checkin" method = "post">
-            {% for item in bin_contents %}
+            {% for key, value in bin_contents.items() %}
 
                 <div class="mb-3">
-                    <select autocomplete="off" autofocus class="form-control mx-auto w-auto" id="{{ item }}" name="{{ item }}" type="text">
-                        <option selected disabled>{{ item }}</option>
+                    <label for="{{ key }}">{{ value }}</label>
+                    <select class="form-control mx-auto w-auto" id="{{ key }}" name="{{ key }}" type="text">
+                        <option selected disabled>Update Status</option>
                         {% for status in statusses %}
                             <option value="{{ status }}">{{ status }}</option>
                         {% endfor %}
-                        </select>
+                    </select>
+                    
                 </div>
 
             {% endfor %}

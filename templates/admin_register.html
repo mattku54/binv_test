@@ -8,7 +8,7 @@
     <!-- This is the admin registration page-->
     <h1>Register as an Admin (Admin_code Required)</h1>
     <div>
-        <form action = "/admin_register" method = "post">
+        <form id = "register" action = "/admin_register" method = "post">
             <div class="mb-3">
                 <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="id" name="id" placeholder="PCC ID" type="text">
             </div>
@@ -19,7 +19,7 @@
                 <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="lname" name="lname" placeholder="Last Name" type="text">
             </div>
             <div class="mb-3">
-                <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="email" name="email" placeholder="E-mail" type="text">
+                <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="email" name="email" placeholder="E-mail" type="email">
             </div>
             <div class="mb-3">
                 <input class="form-control mx-auto w-auto" id="password" name="password" placeholder="Password" type="password">
@@ -34,5 +34,32 @@
 
         </form>        
     </div>
+
+    <script>
+
+        // Client side validation for email
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelector('#register').addEventListener("submit", function(event){
+
+                const email = document.querySelector("input[type='email']").value;
+                const emailPattern = /^[^\s@]+@pasadena\.edu$/;
+                const password = document.querySelector("#password").value;
+                const confirmation = document.querySelector("#confirmation").value;
+                
+                if (!emailPattern.test(email)) {
+                    event.preventDefault();
+                    alert("Please enter a valid pasadena.edu email address.")
+                }
+
+                if (password != confirmation) {
+                    event.preventDefault();
+                    alert("Password and Confirm Password do not match")
+                }
+
+            }
+            )
+        });
+
+     </script>
 
 {% endblock %}

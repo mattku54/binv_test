@@ -5,8 +5,8 @@
 {% endblock %}
 
 {% block main %}
-    <h1>Reset Password Email</h1>
-    <form action="/reset" method="post">
+    <h1>Reset Password</h1>
+    <form action="/reset_verify/<token>" method="post">
         <div class="mb-3">
             <input class="form-control mx-auto w-auto" id="email" name="email" placeholder="E-mail" type="text">
         </div>

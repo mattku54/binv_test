@@ -1,13 +1,7 @@
-import csv
-import datetime
-import pytz
-import requests
-import subprocess
-import urllib
-import uuid
 import jwt
 import os
 
+from datetime import datetime, timedelta
 from flask_mail import Mail, Message
 from flask import flash, redirect, render_template, session
 from functools import wraps
@@ -40,27 +34,9 @@ def admin_login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-def send_reset_email(email, role):
-    """
-    Send a password reset email
-
-    """
-    token = jwt.encode({'email':f"{email}",
-                       'exp': datetime.time() + 500},
-                       key = os.getenv('RESET_KEY_FLASK'))
-    msg = Message()
-    msg.subject = "Binventory App Password Reset"
-    msg.sender = os.getenv('RESET_USERNAME')
-    msg.recipients = email
-    msg.html = render_template('reset_email.html', email=email, role=role, token=token)
-
-    Mail.send(msg)
-
-    return
-
 def verify_reset_token(token):
     # Decodes the token and verifies that the key is the same
-    info = jwt.decode(token, key=os.getenv('RESET_KEY_FLASK'))
+    info = jwt.decode(token, key=os.getenv('RESET_KEY_FLASK'), algorithms="HS256")
 
     if info:
         return info

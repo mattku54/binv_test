@@ -12,20 +12,21 @@ bp = Blueprint('student', __name__)
 db_name = "inventory"
 
 # Chem 2A / 2B Bin Items
-bin_contents = [
-    "wash_bottle", 
-    "grad_cyl_10", 
-    "grad_cyl_50",
-    "stir_rod",
-    "short_fun",
-    "long_fun",
-    "beaker_400",
-    "beaker_250",
-    "beaker_150",
-    "beaker_50",
-    "watch_glass",
-    "plastic_pipets",
-    "balance"] 
+bin_contents = {
+    "wash_bottle": "Wash Bottle", 
+    "grad_cyl_10": "10-mL Graduated Cylinder", 
+    "grad_cyl_50": "50-mL Graduated Cylinder",
+    "stir_rod": "Stir Rod",
+    "short_fun":"Short Funnel",
+    "long_fun":"Long Funnel",
+    "beaker_400":"400-mL Beaker (x2)",
+    "beaker_250": "250-mL Beaker (x2)",
+    "beaker_150": "150-mL Beaker",
+    "beaker_50": "50-mL Beaker",
+    "watch_glass": "Watch Glass",
+    "plastic_pipets": "Plastic Pipets",
+    "balance": "Balance"
+    } 
 
 statusses = ["clean",
           "dirty",

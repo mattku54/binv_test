@@ -7,14 +7,15 @@
 {% block main %}
     <!-- This is the student check out page-->
     <h1>Check Out</h1>
-    <h2>Check all of the items in your bin and report its status. </h2>
+    <h2>Before leaving, try to make sure your bin items are clean and bin contents are complete. </h2>
 
     <div>
         <form action = "/checkout" method = "post">
-            {% for item in bin_contents %}
+            {% for key, value in bin_contents.items() %}
             <div class="mb-3">
-                <select autocomplete="off" autofocus class="form-control mx-auto w-auto" id="{{ item }}" name="{{ item }}" type="text">
-                    <option selected disabled>{{ item }}</option>
+                <label for="{{ key }}">{{ value }}</label>
+                <select autocomplete="off" autofocus class="form-control mx-auto w-auto" id="{{ key }}" name="{{ key }}" type="text">
+                    <option selected disabled>Update Status</option>
                     {% for status in statusses %}
                     <option value="{{ status }}">{{ status }}</option>
                     {% endfor %}

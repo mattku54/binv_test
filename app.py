@@ -2,17 +2,31 @@ from flask import Flask, flash, redirect, render_template, request, session
 from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime, timedelta
-from admin_bp import bp as admin_bp
-from student_bp import bp as student_bp
+from flask_mail import Mail, Message
 import re
 import os
 import sqlite3
+import jwt
 
 from db_helpers import confirm_query_exists, extract_query_info
-from helpers import login_required, send_reset_email, verify_reset_token
+from admin_bp import bp as admin_bp
+from student_bp import bp as student_bp
+from helpers import login_required, verify_reset_token
 
 # Configure application
 app = Flask(__name__)
+
+app_email = 'binventory2024@gmail.com'
+
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = app_email
+app.config['MAIL-DEFAULT-SENDER'] = app_email
+app.config['MAIL_PASSWORD'] = 'pfiu iooh hmlb wivd'
+
+# Configure mail
+mail = Mail(app)
 
 # Register blueprints
 app.register_blueprint(admin_bp)
@@ -308,28 +322,49 @@ def reset():
 
         if not email:
             flash("Must enter email")
-            return redirect("reset.html")
+            return redirect("/reset")
 
-        if table != "admin" or table != "students":
+        if table != "admin" and table != "students":
             flash("Invalid role")
-            return redirect("reset.html")
+            return redirect("/reset")
 
         # Query database to confirm email
         email_query = {"email":f"{email}"}
 
+        key = os.getenv('RESET_KEY_FLASK')
+        print(f"{key}")
+
         if confirm_query_exists(db_name, table, email_query):
             # Send a password reset email
-            flash(f"An email has been sent to {email} with a password reset link")
-            send_reset_email(email, table)
-            return redirect("login.html")
+            try:
+                # Generate email
+                token = jwt.encode({'email': f"{email}",
+                                    'role':f"{table}",
+                                    'exp': datetime.now() + timedelta(minutes=15)},
+                                    key)
+                msg = Message()
+                msg.subject="Binventory App Password Reset"
+                msg.sender = app_email
+                msg.recipients = [email,]
+                msg.html = render_template('reset_email.html', token=token)
 
-        flash(f"An account with email:{email} has not been found, please check for typos in your email addy")
-        return redirect("reset.html")
+                # Send the email
+                mail.send(msg)
+
+            except (TimeoutError, ValueError) as e:
+                flash(f"Reset Email not sent:{e}")
+                return render_template("reset.html")
+            
+            flash(f"An email has been sent to {email} with a password reset link")
+            return render_template("login.html")
+
+        flash(f"An account with email:{email} has not been found with role {table}, please check for typos in your email addy")
+        return render_template("reset.html")
 
     # On a 'GET' request, reset.html will just contain a form to input email
     return render_template("reset.html")
 
-@app.route("/reset_verified", methods = ["GET", "POST"])
+@app.route("/reset_verify/<token>", methods = ["GET", "POST"])
 def reset_verify(token):
     # Change the password for the email
     if request.method == "POST":
@@ -337,14 +372,16 @@ def reset_verify(token):
 
         if not info:
             flash("Invalid or expired token, please request reset email again")
-            return redirect('reset.html')
+            return redirect('/reset')
 
         email = info['email']
         role = info['role']
 
-        if role != "admin" or role != "students":
+        print(f"{role}")
+
+        if role != "admin" and role != "students":
             flash("Invalid role")
-            return redirect("reset.html")
+            return redirect("/reset")
 
         new_password = request.form.get("password")
         hash_newpassword = generate_password_hash(new_password)
@@ -357,11 +394,26 @@ def reset_verify(token):
                     db.execute("UPDATE students SET hash_password = ? WHERE email = ?", (hash_newpassword, email,))
             except sqlite3.Error as e:
                 flash(f"Update error: {e}")
-                return redirect('reset_verified.html')
+                return redirect('/reset')
             db.commit()
             db.close()
         flash("Password successfully reset")
         return redirect("login.html")
 
+    info = verify_reset_token(token)
+
+    if not info:
+        flash("Invalid or expired token, please request reset email again")
+        return redirect('/reset')
+
+    email = info['email']
+    role = info['role']
+
+    print(f"{role}")
+
+    if role != "admin" and role != "students":
+        flash("Invalid role")
+        return redirect("/reset")
+    
     return render_template("reset_verified.html")
 

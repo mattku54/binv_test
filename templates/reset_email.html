@@ -1,6 +1,6 @@
 <div>
     Click on the link below to reset your password
-    <a href="{{ url_for('app_routes.reset_verified', token=token, email=email, role=role, _external=True) }}">
+    <a href="{{ url_for('reset_verify', token=token, _external=True) }}">
         click here
     </a>
 </div>
