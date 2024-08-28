@@ -204,7 +204,7 @@ def bin_check_in():
 
     if not bin_code:
         flash("You have not yet been assigned to a bin")
-        return redirect("/assign.html")
+        return redirect("/assign")
     
     if request.method == "POST":
         
@@ -256,7 +256,7 @@ def bin_check_out():
 
     if not bin_code:
         flash("You have not yet been assigned to a bin")
-        return redirect("/assign.html")
+        return redirect("/assign")
     
     if request.method == "POST":
             
