@@ -8,7 +8,7 @@
     <!-- This is the student registration page-->
     <h1>Use this page to register a new class</h1>
     <div>
-        <form action = "/register_class" method = "post">
+        <form id = "class" action = "/register_class" method = "post">
             <div class="mb-3">
                 <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="class" name="class" placeholder="Class (i.e. - CHEM 2A (with a space))" type="text">
             </div>
@@ -22,8 +22,9 @@
                 <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="room_num" name="room_num" placeholder="Lab Room Number" type="text">
             </div>
             <button class="btn btn-primary" type="submit">Register New Class</button>
-
         </form>        
     </div>
+
+    <script src = "/static/class_validation.js"></script>
 
 {% endblock %}

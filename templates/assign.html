@@ -9,15 +9,15 @@
     <h1>If you have not yet been assigned a bin, register your bin assignment here</h1>
     
     <div>
-        <form action = "/assign" method = "post">
+        <form id = "class" action = "/assign" method = "post">
             <div class="mb-3">
-                <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="semester" name="semester" placeholder="Semester (i.e.- FA22)" type="text">
+                <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="semester" name="semester" placeholder="Semester (i.e.- FA22)" type="text" maxlength="4">
             </div>
             <div class="mb-3">
                 <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="crn" name="crn" placeholder="CRN Number" type="number">
             </div>
             <div class="mb-3">
-                <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="room_num" name="room_num" placeholder="Lab Room Number" type="text">
+                <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="room_num" name="room_num" placeholder="Lab Room Number" type="text" maxlength="4">
             </div>
             <div class="mb-3">
                 <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="bin_num" name="bin_num" placeholder="Bin Number" type="number">
@@ -29,5 +29,30 @@
 
         </form>        
     </div>
+
+    <script src="/static/class_validation.js"></script>
+    
+    <script>
+        document.querySelector('#class').addEventListener("submit", function(event) {
+            
+            // Validate bin number
+            let bin_num = document.querySelector('#bin_num').value;
+            let confirmation = document.querySelector('#confirmation').value;
+
+            if (bin_num != confirmation) {
+                event.preventDefault();
+                alert("Bin code and confirmation do not match")
+            }
+
+            // Validate room number
+            const room_num = document.querySelector('#room_num').value;
+            const room_num_patt = /^SV\d{2}$/
+
+            if (!room_num_patt.test(room_num)) {
+                event.preventDefault();
+                alert("Room number not in valid format")
+            }
+        })
+    </script>
 
 {% endblock %}

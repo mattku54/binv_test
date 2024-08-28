@@ -195,17 +195,18 @@ def bin_check_in():
     # Should include status of every item that's supposed be in the bin and also overall status
     # Include space to provide a flagged comment to previous student
     
+    # First get the user's information
+    student_id = session["user_id"]
+
+    # If assigned, get bin_code from student's id
+    id_query = {"student_id" : f"{student_id}"}
+    bin_code = extract_query_info(db_name, "bin_assign", id_query, "bin_code")
+
+    if not bin_code:
+        flash("You have not yet been assigned to a bin")
+        return redirect("/assign.html")
+    
     if request.method == "POST":
-        # First get the user's information
-        student_id = session["user_id"]
-
-        # If assigned, get bin_code from student's id
-        id_query = {"student_id" : f"{student_id}"}
-        bin_code = extract_query_info(db_name, "bin_assign", id_query, "bin_code")
-
-        if not bin_code:
-            flash("You have not yet been assigned to a bin")
-            return redirect("/assign.html")
         
         # This will create a dict that has all of the form submissions user changed
         update_item_status = {}
@@ -243,17 +244,21 @@ def bin_check_in():
 @login_required
 def bin_check_out():
     # This is the place where students should give status of items in bin at check out
+    
+    # Check to see if student has already registered a bin
+
+    # First get the student's bin information
+    student_id = session["user_id"]
+
+    # If assigned, get bin_code from student's id
+    id_query = {"student_id" : f"{student_id}"}
+    bin_code = extract_query_info(db_name, "bin_assign", id_query, "bin_code")
+
+    if not bin_code:
+        flash("You have not yet been assigned to a bin")
+        return redirect("/assign.html")
+    
     if request.method == "POST":
-        # First get the student's bin information
-        student_id = session["user_id"]
-
-        # If assigned, get bin_code from student's id
-        id_query = {"student_id" : f"{student_id}"}
-        bin_code = extract_query_info(db_name, "bin_assign", id_query, "bin_code")
-
-        if not bin_code:
-            flash("You have not yet been assigned to a bin")
-            return redirect("/assign.html")
             
         # This will create a dict that has all of the form submissions user changed
         update_item_status = {}
@@ -283,5 +288,5 @@ def bin_check_out():
             # Let user know the update was successful
             flash ("Check-Out Successful!")
             return redirect("/")
-        
+                
     return render_template("checkout.html", statusses=statusses, bin_contents=bin_contents)
