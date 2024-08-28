@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function() {
         // Make sure all form elements are filled in
         const form_elements = document.querySelector('#register').elements;
 
-        for (let i=0; i < form_elements.length; i++) {
+        for (let i=0; i < form_elements.length - 1; i++) {
             if (form_elements[i].value === "") {
                 event.preventDefault();
                 alert("Please fill in every entry on the form")
