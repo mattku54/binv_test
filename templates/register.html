@@ -40,10 +40,11 @@
 
                 const email = document.querySelector("input[type='email']").value;
                 const emailPattern = /^[^\s@]+@pasadena\.edu$/;
+                const emailPattern2 = /^[^\s@]+@go.pasadena\.edu$/;
                 const password = document.querySelector("#password").value;
                 const confirmation = document.querySelector("#confirmation").value;
                 
-                if (!emailPattern.test(email)) {
+                if (!emailPattern.test(email) && !emailPattern2.test(email)) {
                     event.preventDefault();
                     alert("Please enter a valid pasadena.edu email address.")
                 }
