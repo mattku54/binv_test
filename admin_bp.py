@@ -249,7 +249,8 @@ def edit_class():
         with sqlite3.connect(f"{db_name}.db") as db:
             try:
                 db.execute("UPDATE bin_assign SET bin_code = ? "\
-                           "WHERE student_id = ?", (bin_code, student_id,))
+                           "WHERE student_id = ?"\
+                           "AND class_code = ?", (bin_code, student_id, class_code,))
                 db.commit()
             except sqlite3.Error as e:
                 flash(f"Database error: {e}")

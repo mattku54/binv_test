@@ -13,6 +13,7 @@ from admin_bp import bp as admin_bp
 from student_bp import bp as student_bp
 from helpers import login_required, verify_reset_token
 
+
 # Configure application
 app = Flask(__name__)
 
@@ -41,6 +42,11 @@ Session(app)
 # Global variables
 now = datetime.now()
 db_name = "inventory"
+
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logging.info(f"Database path: {db_name}.db")
 
 @app.route("/")
 @login_required
