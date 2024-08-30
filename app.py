@@ -43,11 +43,6 @@ Session(app)
 now = datetime.now()
 db_name = "inventory"
 
-import logging
-
-logging.basicConfig(level=logging.INFO)
-logging.info(f"Database path: {db_name}.db")
-
 @app.route("/")
 @login_required
 def index():
@@ -344,8 +339,8 @@ def reset():
             # Send a password reset email
             try:
                 # Generate email
-                token = jwt.encode({'email': f"{email}",
-                                    'role':f"{table}",
+                token = jwt.encode({'email': email,
+                                    'role': table,
                                     'exp': datetime.now() + timedelta(minutes=15)},
                                     key)
                 msg = Message()
@@ -372,6 +367,7 @@ def reset():
 
 @app.route("/reset_verify/<token>", methods = ["GET", "POST"])
 def reset_verify(token):
+    
     # Change the password for the email
     if request.method == "POST":
         info = verify_reset_token(token)
@@ -383,13 +379,17 @@ def reset_verify(token):
         email = info['email']
         role = info['role']
 
-        print(f"{role}")
-
         if role != "admin" and role != "students":
             flash("Invalid role")
             return redirect("/reset")
 
-        new_password = request.form.get("password")
+        new_password = request.form.get("new_pass")
+        confirmation = request.form.get("confirmation")
+
+        if new_password != confirmation:
+            flash("Password and confirmation do not match")
+            return redirect("/rest")
+        
         hash_newpassword = generate_password_hash(new_password)
 
         with sqlite3.connect(f"{db_name}.db") as db:
@@ -415,11 +415,9 @@ def reset_verify(token):
     email = info['email']
     role = info['role']
 
-    print(f"{role}")
-
     if role != "admin" and role != "students":
         flash("Invalid role")
         return redirect("/reset")
     
-    return render_template("reset_verified.html")
+    return render_template("reset_verified.html", token=token)
 
