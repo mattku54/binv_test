@@ -404,7 +404,6 @@ def reset_verify(token):
                 flash(f"Update error: {e}")
                 return redirect('/reset')
             db.commit()
-            db.close()
         flash("Password successfully reset")
         return redirect("login.html")
 
