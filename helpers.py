@@ -35,8 +35,13 @@ def admin_login_required(f):
     return decorated_function
 
 def verify_reset_token(token):
+    
+    key=os.getenv('RESET_KEY_FLASK')
+    print(f"{key}")
+
     # Decodes the token and verifies that the key is the same
     info = jwt.decode(token, key=os.getenv('RESET_KEY_FLASK'), algorithms="HS256")
+
 
     if info:
         return info
