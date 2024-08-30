@@ -6,8 +6,7 @@
 
 {% block main %}
     <h1>Reset Password</h1>
-    <form id = "reset_pass" action="/reset_verify/<token>" method="post">
-        <input type="hidden" name="token" value="{{ token }}">
+    <form id = "reset_pass" action="/reset_verify/{{ token }}" method="post">
         <div class="mb-3">
             <input class="form-control mx-auto w-auto" id="new_pass" name="new_pass" placeholder="New Password" type="password">
         </div>
