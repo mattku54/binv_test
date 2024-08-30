@@ -370,6 +370,8 @@ def reset_verify(token):
     
     # Change the password for the email
     if request.method == "POST":
+        
+        print(f"Post Reset Verify: {token}")
         info = verify_reset_token(token)
 
         if not info:
@@ -406,6 +408,7 @@ def reset_verify(token):
         flash("Password successfully reset")
         return redirect("login.html")
 
+    print(f"Get Reset Verify: {token}")
     info = verify_reset_token(token)
 
     if not info:
