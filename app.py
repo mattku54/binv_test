@@ -12,6 +12,7 @@ from db_helpers import confirm_query_exists, extract_query_info
 from admin_bp import bp as admin_bp
 from student_bp import bp as student_bp
 from helpers import login_required, verify_reset_token
+from jwt import DecodeError
 
 
 # Configure application
@@ -333,7 +334,6 @@ def reset():
         email_query = {"email":f"{email}"}
 
         key = os.getenv('RESET_KEY_FLASK')
-        print(f"{key}")
 
         if confirm_query_exists(db_name, table, email_query):
             # Send a password reset email
@@ -371,8 +371,14 @@ def reset_verify(token):
     # Change the password for the email
     if request.method == "POST":
         
-        print(f"Post Reset Verify: {token}")
-        info = verify_reset_token(token)
+        print(f"Post Request Token: {token}")
+        try:
+            info = verify_reset_token(token)
+        except DecodeError as e:
+            flash(f"Decode Token error: {e} Token: {token}")
+            return redirect('/reset')
+        
+        print(f"Post Token Decoded")
 
         if not info:
             flash("Invalid or expired token, please request reset email again")
@@ -390,7 +396,7 @@ def reset_verify(token):
 
         if new_password != confirmation:
             flash("Password and confirmation do not match")
-            return redirect("/rest")
+            return redirect("/reset")
         
         hash_newpassword = generate_password_hash(new_password)
 
@@ -405,10 +411,13 @@ def reset_verify(token):
                 return redirect('/reset')
             db.commit()
         flash("Password successfully reset")
-        return redirect("login.html")
+        return redirect("/login")
 
-    print(f"Get Reset Verify: {token}")
+    print(f"Get Token:{token}")
+
     info = verify_reset_token(token)
+
+    print(f"Get Token decoded")
 
     if not info:
         flash("Invalid or expired token, please request reset email again")

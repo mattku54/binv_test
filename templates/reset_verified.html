@@ -19,19 +19,17 @@
     <script>
 
         document.addEventListener('DOMContentLoaded', function() {
-            document.querySelector('#reset_pass').addEventListener('submit', function(event) {
+            document.querySelector('#reset_pass').addEventListener("submit", function(event) {
                 
                 const new_pass = document.querySelector('new_pass').value;
                 const confirmation = document.querySelector('confirmation').value;
 
                 if (new_pass != confirmation) {
-
                     event.preventDefault();
                     alert("Password and confirmation do not match")
                 }
 
-            }
-            )
+            })
         });
 
     </script>
