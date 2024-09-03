@@ -213,6 +213,9 @@ def login():
             flash("Must provide password")
             return render_template("login.html")
 
+        db_directory = os.path.join(os.getcwd(), f"{db_name}.db")
+        print (f"{db_directory}")
+
         # Query database for id
         with sqlite3.connect(f"{db_name}.db") as db:
             try:
@@ -411,13 +414,10 @@ def reset_verify(token):
                 return redirect('/reset')
             db.commit()
         flash("Password successfully reset")
-        return redirect("/login")
-
-    print(f"Get Token:{token}")
+        print(f"Password for {email} changed successfully")
+        return render_template("login.html")
 
     info = verify_reset_token(token)
-
-    print(f"Get Token decoded")
 
     if not info:
         flash("Invalid or expired token, please request reset email again")
