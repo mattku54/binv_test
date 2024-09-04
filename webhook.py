@@ -1,6 +1,7 @@
-from flask import Blueprint, Flask, request, abort, redirect
+from flask import Blueprint, Flask, request, abort, redirect, render_template
 import hmac
 import hashlib
+import os
 
 # Configure the blueprint
 bp = Blueprint('webhook', __name__)
@@ -20,12 +21,12 @@ def verify_signature(request):
 
     return hmac.compare_digest(digest, signature)
 
-@bp.route("/", methods = ["POST"])
+@bp.route("/webhook", methods = ["POST"])
 def github_webhook():
     if not verify_signature(request):
-        abort(400, 'Invalid Signature')
+        return abort(400, 'Invalid Signature')
     
-    # Handle payload here
-    redirect("/")
+    # Run script to pull the commit and restart the server
+    os.system('/home/ec2-user/binv_test/.git/hooks/post-receive')
     
-    # return 'Webhook received', 200
+    return 'Webhook received', 200
