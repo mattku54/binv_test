@@ -11,6 +11,7 @@ import jwt
 from db_helpers import confirm_query_exists, extract_query_info
 from admin_bp import bp as admin_bp
 from student_bp import bp as student_bp
+from webhook import bp as webhook
 from helpers import login_required, verify_reset_token
 from jwt import DecodeError
 
@@ -33,6 +34,7 @@ mail = Mail(app)
 # Register blueprints
 app.register_blueprint(admin_bp)
 app.register_blueprint(student_bp)
+app.register_blueprint(webhook)
 
 # Configure session to use filesystem (instead of signed cookies), also logs user out after 1 hour
 app.config["SESSION_PERMANENT"] = True
