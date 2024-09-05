@@ -34,7 +34,6 @@ mail = Mail(app)
 # Register blueprints
 app.register_blueprint(admin_bp)
 app.register_blueprint(student_bp)
-app.register_blueprint(webhook)
 
 # Configure session to use filesystem (instead of signed cookies), also logs user out after 1 hour
 app.config["SESSION_PERMANENT"] = True

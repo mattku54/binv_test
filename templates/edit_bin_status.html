@@ -17,11 +17,11 @@
                 <input autocomplete="off" autofocus class="form-control mx-auto w-auto input1" id="bin_num" name="bin_num" placeholder="Bin Number" type="number">
             </div>
             <button class="btn btn-primary input1" type="button" id = "first_button">Find Bin</button>
-            {% for item in bin_contents %}
+            {% for key, value in bin_contents.items() %}
 
                 <div class="mb-3 input2" style = "display: none;">
-                    <select autocomplete="off" autofocus class="form-control mx-auto w-auto" id="{{ item }}" name="{{ item }}" type="text">
-                        <option selected disabled>{{ item }}</option>
+                    <select autocomplete="off" autofocus class="form-control mx-auto w-auto" id="{{ key }}" name="{{ key }}" type="text">
+                        <option selected disabled>{{ value }}</option>
                         {% for status in statusses %}
                             <option value="{{ status }}">{{ status }}</option>
                         {% endfor %}
