@@ -9,6 +9,7 @@
     <h1 id = "header">Edit the status of an item in a bin. </h1>
 
     <div>
+        <!-- User should be able to select which specific bin they want to edit before putting in the put-->
         <form action = "/edit_bin_status" method = "post">
             <div class="mb-3 input1">
                 <input autocomplete="off" autofocus class="form-control mx-auto w-auto input1" id="room_num" name="room_num" placeholder="Room Number (i.e. - SV20)" type="text">
@@ -17,108 +18,28 @@
                 <input autocomplete="off" autofocus class="form-control mx-auto w-auto input1" id="bin_num" name="bin_num" placeholder="Bin Number" type="number">
             </div>
             <button class="btn btn-primary input1" type="button" id = "first_button">Find Bin</button>
+
             {% for key, value in bin_contents.items() %}
 
                 <div class="mb-3 input2" style = "display: none;">
-                    <select autocomplete="off" autofocus class="form-control mx-auto w-auto" id="{{ key }}" name="{{ key }}" type="text">
+                    <label for="{{ key }}">{{ value }}</label>
+                    <select class="form-control mx-auto w-auto" id="{{ key }}" name="{{ key }}" type="text">
                         <option selected disabled>{{ value }}</option>
                         {% for status in statusses %}
-                            <option value="{{ status }}">{{ status }}</option>
+                            <option value="{{ status }}">Update Status</option>
                         {% endfor %}
                         </select>
                 </div>
 
             {% endfor %}
+
             <div class="mb-3 input2" style= "display: none;">
                 <button class="btn btn-primary" type="submit">Submit</button>
             </div>
 
         </form>        
     </div>
-    <script>
-    
-    function confirm_bin() {
 
-        // alert("Confirm_bin called")
-
-        // Use an ajax request to confirm that the bin exists before user can update the rest of the bins
-        let room_num = document.getElementById('room_num')
-        let bin_num  = document.getElementById('bin_num')
-
-        if (room_num.value == '' || bin_num.value == '') {
-            alert("Please input a valid room number and bin number")
-            return
-        }
-        else {
-            // Initialize new ajax request
-            var aj = new XMLHttpRequest();
-
-            // Create the ajax function
-            aj.onreadystatechange = function() {
-                if (aj.readyState == 4 && aj.status == 200){
-
-                    // alert("Ajax is ready")
-
-                    // Parse through the data, the data will either be false or the bin number
-                    var data = JSON.parse(aj.responseText)
-                    
-                    // Response text should be true if bin is found and false if not
-                    if (data === 'false') {
-                        alert("Bin not found, please select a valid room number and bin number")
-                        return
-                    }
-                    else{
-
-                        alert("Bin number was found")
-                        // Update header instructions
-                        var header = document.getElementById('header')
-                        header.textContent = 'Update status of items in bin number ' + data
-
-                        // Unhide the next inputs
-                        unhide_inputs()
-                        return
-                    }
-                }
-                else{
-                    // alert("AJ Readystate: " + aj.readyState + "Status: " + aj.status);
-                    return
-                }
-            }
-            // Gather the data from the ajax request
-            aj.open("GET", '/confirm_bin?room_num=' + encodeURIComponent(room_num.value) + '&bin_num= ' + encodeURIComponent(bin_num.value), true);
-            aj.send()
-
-        }
-    }
-
-    function unhide_inputs() {
-        
-        // Unhide the inputs for the bin_contents and statusses and input2 button
-        var hidden_rows = document.getElementsByClassName('input2')
-        
-        for (var i = 0; i < hidden_rows.length; i++){
-
-            hidden_rows[i].style.display = "block";
-
-        }
-
-        // Hide the first selections
-        var unhidden_rows = document.getElementsByClassName('input1')
-
-        for (var i = 0; unhidden_rows.length; i++){
-
-            unhidden_rows[i].style.display = "none";
-
-        }
-    }
-        
-    // Once user has selected the room_num and bin_num and pressed the button, use an ajax request to generate the table and the options
-    document.querySelector('#first_button').addEventListener('click', function(event){
-        event.preventDefault();
-        // alert("Button pressed")
-        confirm_bin()
-    })
-
-    </script>
+    <script src="/static/admin_edit_bin_status.js"></script>
 
 {% endblock %}

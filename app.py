@@ -11,7 +11,6 @@ import jwt
 from db_helpers import confirm_query_exists, extract_query_info
 from admin_bp import bp as admin_bp
 from student_bp import bp as student_bp
-from webhook import bp as webhook
 from helpers import login_required, verify_reset_token
 from jwt import DecodeError
 
@@ -137,7 +136,7 @@ def admin_register():
 
         # Check to see that user has the correct admin password
         if admin_key != os.getenv("ADMIN_KEY"):
-            flash ("Incorrect admin password")
+            flash("Incorrect admin password")
             return render_template("admin_register.html")
 
         # Check that the user filled in every spot on the form

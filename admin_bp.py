@@ -378,7 +378,7 @@ def edit_bin_status():
             # Confirm that the user put in the room number and bin number
             if not room_num or not bin_num:
                 flash("Please input a room number and a bin number")
-                return render_template("edit_bin_status.html",bin_conents=bin_contents, statusses=statusses)
+                return render_template("edit_bin_status.html",bin_contents=bin_contents, statusses=statusses)
             
             # Get the bin_code to update the status
             bin_code_query = {"room_num" : f"{room_num.upper()}", "bin_num" : f"{bin_num}"}
