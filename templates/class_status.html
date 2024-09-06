@@ -28,11 +28,17 @@
                         {% for row in bin_statusses %}
                             <tr>
                                 {% for key in row.keys() %}
-                                    {% if key != "bin_code" and key != "last_user_code" %}
+
+                                    {% if key == "last_checkin_time" or key == "last_checkout_time" %}
                                     
+                                        <td class = "date-time" id="{{ key }}">{{ row[key] }}</td>
+                                    
+                                    {% elif key != "bin_code" and key != "last_user_code" %}
+
                                         <td class = "status" id="{{ key }}">{{ row[key] }}</td>
                                     
                                     {% endif %}
+
                                 {% endfor %}
                             </tr>
                         {% endfor %}
@@ -45,7 +51,10 @@
         {% endif %}
 
     
-    <script src = "/static/status_change.js"></script>
+        <script src = "/static/format_date_time.js"></script>
+
+        <script src = "/static/status_change.js"></script>
+
 
     {% else %}
 
