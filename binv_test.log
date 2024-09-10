@@ -1,0 +1,225 @@
+[2024-09-06 16:58:27 +0000] [101493] [INFO] Starting gunicorn 23.0.0
+[2024-09-06 16:58:27 +0000] [101493] [INFO] Listening at: http://127.0.0.1:8000 (101493)
+[2024-09-06 16:58:27 +0000] [101493] [INFO] Using worker: sync
+[2024-09-06 16:58:27 +0000] [101494] [INFO] Booting worker with pid: 101494
+[2024-09-06 16:58:55 +0000] [101493] [INFO] Handling signal: int
+[2024-09-06 16:58:55 +0000] [101494] [INFO] Worker exiting (pid: 101494)
+[2024-09-06 16:58:55 +0000] [101493] [INFO] Shutting down: Master
+[2024-09-06 16:59:09 +0000] [101691] [INFO] Starting gunicorn 23.0.0
+[2024-09-06 16:59:09 +0000] [101691] [INFO] Listening at: http://127.0.0.1:8000 (101691)
+[2024-09-06 16:59:09 +0000] [101691] [INFO] Using worker: sync
+[2024-09-06 16:59:09 +0000] [101692] [INFO] Booting worker with pid: 101692
+[2024-09-06 17:00:50 +0000] [101691] [INFO] Handling signal: int
+[2024-09-06 17:00:50 +0000] [101692] [INFO] Worker exiting (pid: 101692)
+[2024-09-06 17:00:50 +0000] [101691] [INFO] Shutting down: Master
+[2024-09-06 17:01:38 +0000] [102361] [INFO] Starting gunicorn 23.0.0
+[2024-09-06 17:01:38 +0000] [102361] [INFO] Listening at: http://127.0.0.1:8000 (102361)
+[2024-09-06 17:01:38 +0000] [102361] [INFO] Using worker: sync
+[2024-09-06 17:01:38 +0000] [102365] [INFO] Booting worker with pid: 102365
+[2024-09-06 17:02:34 +0000] [102361] [INFO] Handling signal: int
+[2024-09-06 17:02:34 +0000] [102365] [INFO] Worker exiting (pid: 102365)
+[2024-09-06 17:02:34 +0000] [102361] [INFO] Shutting down: Master
+[2024-09-06 17:07:26 +0000] [104000] [DEBUG] Current configuration:
+  config: ./gunicorn.conf.py
+  wsgi_app: None
+  bind: ['0.0.0.0:5000']
+  backlog: 2048
+  workers: 1
+  worker_class: sync
+  threads: 1
+  worker_connections: 1000
+  max_requests: 0
+  max_requests_jitter: 0
+  timeout: 30
+  graceful_timeout: 30
+  keepalive: 2
+  limit_request_line: 4094
+  limit_request_fields: 100
+  limit_request_field_size: 8190
+  reload: False
+  reload_engine: auto
+  reload_extra_files: []
+  spew: False
+  check_config: False
+  print_config: False
+  preload_app: False
+  sendfile: None
+  reuse_port: False
+  chdir: /home/ec2-user/binv_test
+  daemon: False
+  raw_env: []
+  pidfile: None
+  worker_tmp_dir: None
+  user: 1000
+  group: 1000
+  umask: 0
+  initgroups: False
+  tmp_upload_dir: None
+  secure_scheme_headers: {'X-FORWARDED-PROTOCOL': 'ssl', 'X-FORWARDED-PROTO': 'https', 'X-FORWARDED-SSL': 'on'}
+  forwarded_allow_ips: ['127.0.0.1', '::1']
+  accesslog: None
+  disable_redirect_access_to_syslog: False
+  access_log_format: %(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"
+  errorlog: binv_test.log
+  loglevel: debug
+  capture_output: False
+  logger_class: gunicorn.glogging.Logger
+  logconfig: None
+  logconfig_dict: {}
+  logconfig_json: None
+  syslog_addr: udp://localhost:514
+  syslog: False
+  syslog_prefix: None
+  syslog_facility: user
+  enable_stdio_inheritance: False
+  statsd_host: None
+  dogstatsd_tags: 
+  statsd_prefix: 
+  proc_name: None
+  default_proc_name: app:app
+  pythonpath: None
+  paste: None
+  on_starting: <function OnStarting.on_starting at 0x7f256b36c820>
+  on_reload: <function OnReload.on_reload at 0x7f256b36c940>
+  when_ready: <function WhenReady.when_ready at 0x7f256b36ca60>
+  pre_fork: <function Prefork.pre_fork at 0x7f256b36cb80>
+  post_fork: <function Postfork.post_fork at 0x7f256b36cca0>
+  post_worker_init: <function PostWorkerInit.post_worker_init at 0x7f256b36cdc0>
+  worker_int: <function WorkerInt.worker_int at 0x7f256b36cee0>
+  worker_abort: <function WorkerAbort.worker_abort at 0x7f256b383040>
+  pre_exec: <function PreExec.pre_exec at 0x7f256b383160>
+  pre_request: <function PreRequest.pre_request at 0x7f256b383280>
+  post_request: <function PostRequest.post_request at 0x7f256b383310>
+  child_exit: <function ChildExit.child_exit at 0x7f256b383430>
+  worker_exit: <function WorkerExit.worker_exit at 0x7f256b383550>
+  nworkers_changed: <function NumWorkersChanged.nworkers_changed at 0x7f256b383670>
+  on_exit: <function OnExit.on_exit at 0x7f256b383790>
+  ssl_context: <function NewSSLContext.ssl_context at 0x7f256b3838b0>
+  proxy_protocol: False
+  proxy_allow_ips: ['127.0.0.1', '::1']
+  keyfile: None
+  certfile: None
+  ssl_version: 2
+  cert_reqs: 0
+  ca_certs: None
+  suppress_ragged_eofs: True
+  do_handshake_on_connect: False
+  ciphers: None
+  raw_paste_global_conf: []
+  permit_obsolete_folding: False
+  strip_header_spaces: False
+  permit_unconventional_http_method: False
+  permit_unconventional_http_version: False
+  casefold_http_method: False
+  forwarder_headers: ['SCRIPT_NAME', 'PATH_INFO']
+  header_map: drop
+[2024-09-06 17:07:26 +0000] [104000] [INFO] Starting gunicorn 23.0.0
+[2024-09-06 17:07:26 +0000] [104000] [DEBUG] Arbiter booted
+[2024-09-06 17:07:26 +0000] [104000] [INFO] Listening at: http://0.0.0.0:5000 (104000)
+[2024-09-06 17:07:26 +0000] [104000] [INFO] Using worker: sync
+[2024-09-06 17:07:26 +0000] [104001] [INFO] Booting worker with pid: 104001
+[2024-09-06 17:07:26 +0000] [104000] [DEBUG] 1 workers
+[2024-09-06 17:08:12 +0000] [104000] [INFO] Handling signal: int
+[2024-09-06 17:08:12 +0000] [104000] [INFO] Shutting down: Master
+[2024-09-06 17:19:47 +0000] [106847] [DEBUG] Current configuration:
+  config: ./gunicorn.conf.py
+  wsgi_app: None
+  bind: ['0.0.0.0:5000']
+  backlog: 2048
+  workers: 1
+  worker_class: sync
+  threads: 1
+  worker_connections: 1000
+  max_requests: 0
+  max_requests_jitter: 0
+  timeout: 30
+  graceful_timeout: 30
+  keepalive: 2
+  limit_request_line: 4094
+  limit_request_fields: 100
+  limit_request_field_size: 8190
+  reload: False
+  reload_engine: auto
+  reload_extra_files: []
+  spew: False
+  check_config: False
+  print_config: False
+  preload_app: False
+  sendfile: None
+  reuse_port: False
+  chdir: /home/ec2-user/binv_test
+  daemon: False
+  raw_env: []
+  pidfile: None
+  worker_tmp_dir: None
+  user: 1000
+  group: 1000
+  umask: 0
+  initgroups: False
+  tmp_upload_dir: None
+  secure_scheme_headers: {'X-FORWARDED-PROTOCOL': 'ssl', 'X-FORWARDED-PROTO': 'https', 'X-FORWARDED-SSL': 'on'}
+  forwarded_allow_ips: ['127.0.0.1', '::1']
+  accesslog: None
+  disable_redirect_access_to_syslog: False
+  access_log_format: %(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"
+  errorlog: binv_test.log
+  loglevel: debug
+  capture_output: False
+  logger_class: gunicorn.glogging.Logger
+  logconfig: None
+  logconfig_dict: {}
+  logconfig_json: None
+  syslog_addr: udp://localhost:514
+  syslog: False
+  syslog_prefix: None
+  syslog_facility: user
+  enable_stdio_inheritance: False
+  statsd_host: None
+  dogstatsd_tags: 
+  statsd_prefix: 
+  proc_name: None
+  default_proc_name: app:app
+  pythonpath: None
+  paste: None
+  on_starting: <function OnStarting.on_starting at 0x7f5f34b53820>
+  on_reload: <function OnReload.on_reload at 0x7f5f34b53940>
+  when_ready: <function WhenReady.when_ready at 0x7f5f34b53a60>
+  pre_fork: <function Prefork.pre_fork at 0x7f5f34b53b80>
+  post_fork: <function Postfork.post_fork at 0x7f5f34b53ca0>
+  post_worker_init: <function PostWorkerInit.post_worker_init at 0x7f5f34b53dc0>
+  worker_int: <function WorkerInt.worker_int at 0x7f5f34b53ee0>
+  worker_abort: <function WorkerAbort.worker_abort at 0x7f5f34b6a040>
+  pre_exec: <function PreExec.pre_exec at 0x7f5f34b6a160>
+  pre_request: <function PreRequest.pre_request at 0x7f5f34b6a280>
+  post_request: <function PostRequest.post_request at 0x7f5f34b6a310>
+  child_exit: <function ChildExit.child_exit at 0x7f5f34b6a430>
+  worker_exit: <function WorkerExit.worker_exit at 0x7f5f34b6a550>
+  nworkers_changed: <function NumWorkersChanged.nworkers_changed at 0x7f5f34b6a670>
+  on_exit: <function OnExit.on_exit at 0x7f5f34b6a790>
+  ssl_context: <function NewSSLContext.ssl_context at 0x7f5f34b6a8b0>
+  proxy_protocol: False
+  proxy_allow_ips: ['127.0.0.1', '::1']
+  keyfile: None
+  certfile: None
+  ssl_version: 2
+  cert_reqs: 0
+  ca_certs: None
+  suppress_ragged_eofs: True
+  do_handshake_on_connect: False
+  ciphers: None
+  raw_paste_global_conf: []
+  permit_obsolete_folding: False
+  strip_header_spaces: False
+  permit_unconventional_http_method: False
+  permit_unconventional_http_version: False
+  casefold_http_method: False
+  forwarder_headers: ['SCRIPT_NAME', 'PATH_INFO']
+  header_map: drop
+[2024-09-06 17:19:47 +0000] [106847] [INFO] Starting gunicorn 23.0.0
+[2024-09-06 17:19:47 +0000] [106847] [DEBUG] Arbiter booted
+[2024-09-06 17:19:47 +0000] [106847] [INFO] Listening at: http://0.0.0.0:5000 (106847)
+[2024-09-06 17:19:47 +0000] [106847] [INFO] Using worker: sync
+[2024-09-06 17:19:47 +0000] [106848] [INFO] Booting worker with pid: 106848
+[2024-09-06 17:19:47 +0000] [106847] [DEBUG] 1 workers
+[2024-09-06 17:20:18 +0000] [106847] [INFO] Handling signal: int
+[2024-09-06 17:20:18 +0000] [106847] [INFO] Shutting down: Master
