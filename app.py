@@ -329,7 +329,7 @@ def reset():
             flash("Must enter email")
             return redirect("/reset")
 
-        if table != "admin" and table != "students":
+        if table != "admins" and table != "students":
             flash("Invalid role")
             return redirect("/reset")
 
