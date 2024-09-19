@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         // Make sure a pasadena.edu or go.pasadena.edu email is used
-        const email = document.querySelector('email').value;
+        const email = document.querySelector('#email').value;
         const emailPattern = /^[^\s@]+@pasadena\.edu$/;
         const emailPattern2 = /^[^\s@]+@go.pasadena\.edu$/;
         
@@ -24,12 +24,13 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         // Make sure password and confirmation match    
-        const password = document.querySelector('password').value;
-        const confirmation = document.querySelector('confirmation').value;
+        const password = document.querySelector('#password').value;
+        const confirmation = document.querySelector('#confirmation').value;
 
         if (password != confirmation) {
             event.preventDefault();
             alert("Password and Confirmation do not match")
+            return false
         }
 
     }

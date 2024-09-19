@@ -20,11 +20,11 @@ bin_contents = {
     "short_fun":"Short Funnel",
     "long_fun":"Long Funnel",
     "beaker_400":"400-mL Beaker (x2)",
-    "beaker_250": "250-mL Beaker (x2)",
+    "beaker_250": "250-mL Beaker",
     "beaker_150": "150-mL Beaker",
-    "beaker_50": "50-mL Beaker",
-    "watch_glass": "Watch Glass",
-    "plastic_pipets": "Plastic Pipets",
+    "beaker_50": "50-mL Beaker (x2)",
+    "watch_glass": "Watch Glass (x2)",
+    "plastic_pipets": "Plastic Pipets (x2)",
     "balance": "Balance"
     } 
 
@@ -88,9 +88,18 @@ def assign():
             flash("Bin does not exist or bin has not yet been registered in room")
             return render_template("assign.html")
         
-
-        # Check that the bin number chosen has not yet been selected by someone in the class
         table3 = "bin_assign"
+        # Check that user has not already registered for a bin in the class 
+        assigned_query = {
+             "class_code": f"{class_code}",
+             "student_id": f"{student_id}"
+        }
+
+        if confirm_query_exists(db_name, table3, assigned_query):
+            flash(f"You've already registered for a bin in this class. Ask instructor to reassign your bin if necessary")
+            return redirect('/status')
+        
+        # Check to see if bin number chosen has not yet been selected by someone in the class
         assign_query = {
             "class_code": f"{class_code}",
             "bin_code": f"{bin_code}"
@@ -98,7 +107,7 @@ def assign():
 
         if confirm_query_exists(db_name, table3, assign_query):
             flash(f"Sorry, you or someone else in your class has already been assigned to that bin (bin# {bin_num})")
-            return render_template("assign.html")
+            return redirect("/assign")
 
         # Update the bin_assign db with the student id and bin code assigned
         # !!!! You may have to find another error for the except block !!!
@@ -107,7 +116,7 @@ def assign():
                 db.execute("INSERT INTO bin_assign (class_code, student_id, bin_code) VALUES (?, ?, ?)", (class_code, student_id, bin_code))
         except sqlite3.Error as e:
             flash(f"An error occurred, {e}")
-            return render_template("assign.html")
+            return redirect("/assign")
 
         # Confirm that the info is in the database and then assign the student bin and the current class info
         # This will save the student's CURRENT bin_code and class_code (this may change if user has to register again in a diff. semester or class)
@@ -118,7 +127,7 @@ def assign():
             return redirect("/status")
         else:
             flash("Registration failed - not found in db")
-            return render_template("assign.html")
+            return redirect("/assign")
         
     else:
         
@@ -215,23 +224,39 @@ def bin_check_in():
             if status in statusses:
                 update_item_status[f"{item}"] = status
 
-        # Create sql query that updates the info for bin_num
-        col_query = ", ".join(f"{key} = ?" for key in update_item_status)
-        values = list(update_item_status.values())
-        values.append(student_id)
-        values.append(bin_code)
+        if update_item_status:
+            # Create sql query that updates the info for bin_num
+            col_query = ", ".join(f"{key} = ?" for key in update_item_status)
+            values = list(update_item_status.values())
+            values.append(student_id)
+            values.append(bin_code)
 
-        # Update the bin_items table with the reported statusses
-        with sqlite3.connect(f"{db_name}.db") as db:
-            try:
-                db.execute(f"UPDATE bin_items SET {col_query}, "\
-                       "last_user_code = ?,"\
-                       "last_checkin_time = datetime('now')"
-                       "WHERE bin_code = ?", (values))
-                db.commit()
-            except sqlite3.Error as e:
-                flash(f"Database update error updated, {e}")
-                return render_template("checkin.html", statusses=statusses, bin_contents=bin_contents)
+            # Update the bin_items table with the reported statusses
+            with sqlite3.connect(f"{db_name}.db") as db:
+                try:
+                    db.execute(f"UPDATE bin_items SET {col_query}, "\
+                        "last_user_code = ?,"\
+                        "last_checkin_time = datetime('now')"
+                        "WHERE bin_code = ?", (values))
+                    db.commit()
+                except sqlite3.Error as e:
+                    flash(f"Database update error updated, {e}")
+                    return render_template("checkin.html", statusses=statusses, bin_contents=bin_contents)
+        
+        else:
+            # Update the bin_items table w/ the checkout time
+            with sqlite3.connect(f"{db_name}.db") as db:
+                try:
+                    db.execute(f"UPDATE bin_items SET "\
+                        "last_user_code = ?, "\
+                        "last_checkin_time = datetime('now') "\
+                        "WHERE bin_code = ?",
+                        (student_id, bin_code,))
+                    db.commit()
+                except sqlite3.Error as e:
+                    flash(f"Database update error, {e}")
+                    return render_template("checkout.html", statusses=statusses, bin_contents=bin_contents)
+
 
         # Let user know the update was successful
         flash ("Check-in Successful!")
@@ -266,27 +291,43 @@ def bin_check_out():
             status = request.form.get(f"{item}")
             if status in statusses:
                 update_item_status[f"{item}"] = status
+        
+        # If there are any items that need updating, update them
+        if update_item_status:
+            # Create sql query that updates the info for bin_num
+            col_query = ", ".join(f"{key} = ?" for key in update_item_status)
+            values = list(update_item_status.values())
+            values.append(student_id)
+            values.append(bin_code)
 
-        # Create sql query that updates the info for bin_num
-        col_query = ", ".join(f"{key} = ?" for key in update_item_status)
-        values = list(update_item_status.values())
-        values.append(student_id)
-        values.append(bin_code)
+            # Update the bin_items table with the changes and the checkout time
+            with sqlite3.connect(f"{db_name}.db") as db:
+                try:
+                    db.execute(f"UPDATE bin_items SET {col_query}, "\
+                        "last_user_code = ?, "\
+                        "last_checkout_time = datetime('now') "\
+                        "WHERE bin_code = ?", (values))
+                    db.commit()
+                except sqlite3.Error as e:
+                    flash(f"Database update error, {e}")
+                    return render_template("checkout.html", statusses=statusses, bin_contents=bin_contents)
 
-        # Update the bin_items table
-        with sqlite3.connect(f"{db_name}.db") as db:
-            try:
-                db.execute(f"UPDATE bin_items SET {col_query}, "\
-                    "last_user_code = ?, "\
-                    "last_checkout_time = datetime('now')"
-                    "WHERE bin_code = ?", (values))
-                db.commit()
-            except sqlite3.Error as e:
-                flash(f"Database update error, {e}")
-                return render_template("checkout.html", statusses=statusses, bin_contents=bin_contents)
+        else:
+            # Update the bin_items table w/ the checkout time
+            with sqlite3.connect(f"{db_name}.db") as db:
+                try:
+                    db.execute(f"UPDATE bin_items SET "\
+                        "last_user_code = ?, "\
+                        "last_checkout_time = datetime('now') "\
+                        "WHERE bin_code = ?",
+                        (student_id, bin_code,))
+                    db.commit()
+                except sqlite3.Error as e:
+                    flash(f"Database update error, {e}")
+                    return render_template("checkout.html", statusses=statusses, bin_contents=bin_contents)
 
-            # Let user know the update was successful
-            flash ("Check-Out Successful!")
-            return redirect("/")
+        # Let user know the update was successful
+        flash ("Check-Out Successful!")
+        return redirect("/")
                 
     return render_template("checkout.html", statusses=statusses, bin_contents=bin_contents)

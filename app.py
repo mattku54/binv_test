@@ -12,6 +12,7 @@ from db_helpers import confirm_query_exists, extract_query_info
 from admin_bp import bp as admin_bp
 from student_bp import bp as student_bp
 from helpers import login_required, verify_reset_token
+from jwt import DecodeError
 
 
 # Configure application
@@ -135,7 +136,7 @@ def admin_register():
 
         # Check to see that user has the correct admin password
         if admin_key != os.getenv("ADMIN_KEY"):
-            flash ("Incorrect admin password")
+            flash("Incorrect admin password")
             return render_template("admin_register.html")
 
         # Check that the user filled in every spot on the form
@@ -211,6 +212,9 @@ def login():
         if not password:
             flash("Must provide password")
             return render_template("login.html")
+
+        db_directory = os.path.join(os.getcwd(), f"{db_name}.db")
+        print (f"{db_directory}")
 
         # Query database for id
         with sqlite3.connect(f"{db_name}.db") as db:
@@ -325,7 +329,7 @@ def reset():
             flash("Must enter email")
             return redirect("/reset")
 
-        if table != "admin" and table != "students":
+        if table != "admins" and table != "students":
             flash("Invalid role")
             return redirect("/reset")
 
@@ -333,7 +337,6 @@ def reset():
         email_query = {"email":f"{email}"}
 
         key = os.getenv('RESET_KEY_FLASK')
-        print(f"{key}")
 
         if confirm_query_exists(db_name, table, email_query):
             # Send a password reset email
@@ -370,7 +373,15 @@ def reset_verify(token):
     
     # Change the password for the email
     if request.method == "POST":
-        info = verify_reset_token(token)
+        
+        print(f"Post Request Token: {token}")
+        try:
+            info = verify_reset_token(token)
+        except DecodeError as e:
+            flash(f"Decode Token error: {e} Token: {token}")
+            return redirect('/reset')
+        
+        print(f"Post Token Decoded")
 
         if not info:
             flash("Invalid or expired token, please request reset email again")
@@ -388,7 +399,7 @@ def reset_verify(token):
 
         if new_password != confirmation:
             flash("Password and confirmation do not match")
-            return redirect("/rest")
+            return redirect("/reset")
         
         hash_newpassword = generate_password_hash(new_password)
 
@@ -402,9 +413,9 @@ def reset_verify(token):
                 flash(f"Update error: {e}")
                 return redirect('/reset')
             db.commit()
-            db.close()
         flash("Password successfully reset")
-        return redirect("login.html")
+        print(f"Password for {email} changed successfully")
+        return render_template("login.html")
 
     info = verify_reset_token(token)
 
