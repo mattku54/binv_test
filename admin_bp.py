@@ -206,6 +206,7 @@ def edit_class():
             flash("Please input a semester or crn")
             return render_template("edit_class.html")
 
+        # Confirm class exists
         class_query = {"semester" : f"{semester}", "crn" : f"{crn}"}
         class_code = extract_query_info(db_name, "classes", class_query, "class_code")
         if not class_code:
@@ -214,24 +215,6 @@ def edit_class():
         
         room_num = extract_query_info(db_name, "classes", class_query, "room_num")
 
-        # Code path to update bin assignment...put in info
-        bin_num = request.form.get('empty_bins')
-
-        if not bin_num:
-            flash("Please select a new bin to be assigned")
-            return render_template("edit_class.html")
-
-        # Find the bin_code
-        bin_query = {"bin_num": f"{bin_num}", "room_num": f"{room_num}"}
-        bin_code = extract_query_info(db_name, "bins", bin_query, "bin_code")
-        
-        # Check to make sure that the bin has not yet been assigned in the class      
-        assign_query = {"bin_code": f"{bin_code}", "class_code": f"{class_code}"}
-
-        if confirm_query_exists(db_name, "bin_assign", assign_query):
-            flash("Bin already assigned to another user...select another bin")
-            return render_template("edit_class.html")
-    
 
         # Check to make sure student is enrolled in the class
         student_id = request.form.get('students')
@@ -244,6 +227,37 @@ def edit_class():
         if not confirm_query_exists (db_name, "bin_assign", student_query):
             flash(f"Error: User is not registered in this class, ID = {student_id}, class_code = {class_code}")
             return render_template("edit_class.html")
+        
+
+        # Code path to update bin assignment...put in info
+        bin_num = request.form.get('empty_bins')
+
+        if not bin_num:
+            flash("Please select a new bin to be assigned")
+            return render_template("edit_class.html")
+        
+        # Handle case where student just needs to be unassigned from bin
+        if bin_num == "unassign":
+            ua_check = unassign(class_code, student_id)
+            if ua_check:
+                flash ("Student successfully unassigned from bin")
+                return render_template("edit_class.html")
+                       
+            else:
+                flash("Student could not be unassigned from bin")
+                return render_template("edit_class.html")
+        
+        # Find the bin_code for the NEW bin if selected
+        bin_query = {"bin_num": f"{bin_num}", "room_num": f"{room_num}"}
+        bin_code = extract_query_info(db_name, "bins", bin_query, "bin_code")
+        
+        # Check to make sure that the bin has not yet been assigned in the class      
+        assign_query = {"bin_code": f"{bin_code}", "class_code": f"{class_code}"}
+
+        if confirm_query_exists(db_name, "bin_assign", assign_query):
+            flash("Bin already assigned to another user...select another bin")
+            return render_template("edit_class.html")
+    
 
         # Update bin_assign with the new bin number for the student
         with sqlite3.connect(f"{db_name}.db") as db:
@@ -267,6 +281,20 @@ def edit_class():
             return render_template("edit_class.html")
 
     return render_template("edit_class.html")
+
+def unassign(class_code, student_id):
+
+    try:
+        with sqlite3.connect(f"{db_name}.db") as db:
+            cursor = db.execute("DELETE FROM bin_assign" \
+                    "WHERE class_code = ?" \
+                    "AND student_id = ?", (class_code, student_id,))
+            cursor.close()
+        return True
+        
+    except sqlite3.Error as e:
+        flash(f"A server error occured when unassigning student: {e}")
+        return False
 
 @bp.route("/student_empty_lists", methods = ["GET", "POST"])
 @admin_login_required
