@@ -40,7 +40,7 @@
             <div class="mb-3 input2" style="display: none;">
                 <select autofocus class = "form-control mx-auto w-auto" name = "empty_bins" id = "empty_bins"> 
 
-                    <option selected disabled>New Bin Number</option>
+                    <option selected disabled>New Bin Number or Unassign from Bin</option>
                     <!-- More options will be generated via AJAX-->
 
                 </select>
@@ -91,7 +91,7 @@
                 // Initialize ajax request for student_list and empty_bins
                 var aj = new XMLHttpRequest();
 
-                // Unhide student name and new bin nputs
+                // Unhide student name and new bin inputs
                 aj.onreadystatechange = function() {
                     if(aj.readyState == 4 && aj.status == 200){
                         
@@ -188,6 +188,17 @@
                 option.textContent = empty_bin_list[i]
                 document.getElementById('empty_bins').appendChild(option);
             }
+
+            // Create an option to unassign the student
+            function unassign_option() {
+                var unassign_option = document.createElement('option');
+                unassign_option.value = "unassign"
+                unassign_option.textContent = "Unassign Student from Bin"
+                document.getElementById('empty_bins').appendChild(unassign_option);
+            }
+            
+            unassign_option();
+
         }
         else {
 
